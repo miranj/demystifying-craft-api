@@ -3,54 +3,82 @@
 
 
 {# Params #}
-{% set events = craft.entries.section('events').all() %}
+{% set ticketTypes = craft.entries.section('ticketTypes').all() %}
+{% set events = craft.entries.section('events')
+  .with(['venue', 'ticketTypes'])
+  .all()
+  |sort((a, b) => a.startDate == b.startDate
+    ? a.venue.one().title <=> b.venue.one().title
+    : a.startDate <=> b.startDate
+  )
+%}
 
 
 
 {# Layout #}
 {% block page_body %}
   <main class="max-w-xl px-6 mx-auto">
+    {{ block('index_intro') }}
     {{ block('index_list') }}
   </main>
 {% endblock %}
 
 
 
+{# Render #}
+{% block index_intro %}
+  {% for ticketType in ticketTypes %}
+    {% if loop.first %}
+      <h3 class="uppercase text-gray-500 text-xs tracking-wider mb-3">
+        Ticket Types
+      </h3>
+      <ul class="flex gap-1 mb-24">
+    {% endif %}
+        <li class="p-4 flex-1 bg-gray-100 h-40">
+          {{ ticketType }}
+        </li>
+    {% if loop.last %}
+      </ul> 
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+
 {% block index_list %}
   {% for event in events %}
     {% if loop.first %}
-      <div class="space-y-8">
+      <h3 class="uppercase text-gray-500 text-xs tracking-wider">
+        Performances
+      </h3>
+      <ul class="divide-y divide-gray-200">
     {% endif %}
     
-    <article>
-      <div class="flex justify-between items-center">
-        <div class="">
-          <h2 class="text-xl font-bold">
+    <li>
+      <article class="flex gap-2 justify-between items-center py-8">
+        <div class="flex-1">
+          <h2 class="text-xl font-bold mb-1">
             {{ event.title }}
           </h2>
-          {{ event.venue.one() }}
+          
+          <p class="text-xs text-gray-500">
+            <time datetime="{{ event.startDate|atom }}">
+              {{ event.startDate|time('ga') }},
+              {{ event.startDate|date('j M') }}
+            </time>
+            •
+            {{ event.venue.one() }}
+          </p>
         </div>
         
-        <div class="font-mono text-xs uppercase bg-gray-100 p-3 w-40">
-          <time datetime="{{ event.startDate|atom }}">
-            <span class="normal-case font-bold text-sm">
-              {{ event.startDate|date('d M') }}
-            </span>
-            <br>
-            {{ event.startDate|time('short') }}
-          </time>
-          -
-          <time datetime="{{ event.endDate|atom }}">
-            {{ event.endDate|time('short') }}
-          </time>
+        <div class="text-sm w-32">
+          {{ event.ticketTypes.all()
+              |join('<br>')
+              |raw }}
         </div>
-      </div>
-      
-      {{ event.ticketTypes.all()|join(', ') }}
-    </article>
+      </article>
+    </li>
     
     {% if loop.last %}
-      </div>
+      </ul>
     {% endif %}
   {% endfor %}
 {% endblock %}
