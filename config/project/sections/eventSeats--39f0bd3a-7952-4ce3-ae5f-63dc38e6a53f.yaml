@@ -1,7 +1,7 @@
 defaultPlacement: end
 enableVersioning: true
-handle: eventTickets
-name: 'Event Tickets'
+handle: eventSeats
+name: 'Event Seats'
 propagationMethod: all
 siteSettings:
   71a06e16-09c8-4a1f-afc1-9e75603074b2: # Demystifying the Craft API

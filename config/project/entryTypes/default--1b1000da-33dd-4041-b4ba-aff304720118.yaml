@@ -60,7 +60,7 @@ fieldLayouts:
 handle: default
 hasTitleField: false
 name: Default
-section: 39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f # Event Tickets
+section: 39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f # Event Seats
 showStatusField: true
 slugTranslationKeyFormat: null
 slugTranslationMethod: site
