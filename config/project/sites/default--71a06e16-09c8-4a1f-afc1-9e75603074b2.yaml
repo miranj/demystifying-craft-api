@@ -1,0 +1,9 @@
+baseUrl: $PRIMARY_SITE_URL
+enabled: true
+handle: default
+hasUrls: true
+language: en-IN
+name: 'Demystifying the Craft API'
+primary: true
+siteGroup: c8bb82a8-5eb8-4838-8862-acf3772b654f # Default
+sortOrder: 1

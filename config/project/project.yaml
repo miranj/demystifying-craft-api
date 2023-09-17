@@ -1,0 +1,27 @@
+dateModified: 1694959552
+email:
+  fromEmail: hello+demystifying@miranj.in
+  fromName: 'Demystifying the Craft API'
+  replyToEmail: null
+  template: null
+  transportSettings:
+    command: '/usr/sbin/sendmail -bs'
+  transportType: craft\mail\transportadapters\Sendmail
+meta:
+  __names__:
+    71a06e16-09c8-4a1f-afc1-9e75603074b2: 'Demystifying the Craft API' # Demystifying the Craft API
+    5201e202-c121-4180-8bca-fb90eb1cc31e: Common # Common
+    c8bb82a8-5eb8-4838-8862-acf3772b654f: Default # Default
+system:
+  edition: solo
+  live: true
+  name: 'Demystifying Craft API'
+  retryDuration: null
+  schemaVersion: 4.5.3.0
+  timeZone: Asia/Kolkata
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  requireEmailVerification: true

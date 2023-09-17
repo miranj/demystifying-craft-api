@@ -1,0 +1,27 @@
+# OS Cruft
+.DS_Store
+
+# Package Managers
+vendor/
+node_modules/
+
+# Craft CMS
+config/license.key
+web/cpresources/
+
+# Environment specific config
+.env
+web/.htaccess
+.editorconfig
+.tm_properties
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.idea/
+
+# User data
+web/media/
+web/images/
+
+# Testing
+templates/test.twig
