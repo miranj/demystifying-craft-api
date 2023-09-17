@@ -1,4 +1,4 @@
-dateModified: 1694963213
+dateModified: 1694979532
 elementSources:
   craft\elements\Entry:
     -
@@ -20,12 +20,17 @@ elementSources:
         - 'field:684ebf49-47fd-4fb2-9391-c62f73834e4c' # Website
       type: native
     -
-      key: 'section:39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f' # Event Tickets
-      type: native
-    -
       defaultSort:
         - postDate
         - desc
+      disabled: false
+      key: 'section:39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f' # Event Tickets
+      tableAttributes: '-'
+      type: native
+    -
+      defaultSort:
+        - 'field:a92807df-eb71-4ecb-ab1d-0620e82f7a87' # Start Date
+        - asc
       disabled: false
       key: 'section:5473c65a-ee4c-4a40-a958-8fd045665aab' # Events
       tableAttributes:
@@ -40,6 +45,7 @@ elementSources:
       disabled: false
       key: 'section:5ff17206-0cb2-4f7f-9523-f6b2119841e4' # Venues
       tableAttributes:
+        - 'field:f38eea64-9a8c-4240-955b-3a311f1f1c4c' # Seats Available
         - link
       type: native
     -
@@ -60,6 +66,7 @@ meta:
   __names__:
     1b1000da-33dd-4041-b4ba-aff304720118: Default # Default
     5ff17206-0cb2-4f7f-9523-f6b2119841e4: Venues # Venues
+    6d4be476-efd7-4974-aa25-187c2c2ea78f: Event # Event
     8a3c91a6-0a3f-4118-8c4e-b57a51ad7905: Home # Home
     8c0fb2bb-fb77-43e1-bdc1-774f32e09839: Artists # Artists
     13e5485b-5a3d-47f3-a8f1-bd285d0e3fda: Default # Default
@@ -78,6 +85,7 @@ meta:
     c8bb82a8-5eb8-4838-8862-acf3772b654f: Default # Default
     d464b66a-c5f1-47c6-a51b-57f1babebff2: 'Ticket Types' # Ticket Types
     d34911a7-7495-403e-9274-c6ebb97698f4: Venue # Venue
+    f38eea64-9a8c-4240-955b-3a311f1f1c4c: 'Seats Available' # Seats Available
     fa505187-cda5-433e-8ede-ff59bcaaf83c: Artists # Artists
 system:
   edition: solo

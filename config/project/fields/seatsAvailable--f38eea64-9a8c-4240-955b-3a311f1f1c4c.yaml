@@ -1,0 +1,20 @@
+columnSuffix: wkpdbase
+contentColumnType: integer(10)
+fieldGroup: 5201e202-c121-4180-8bca-fb90eb1cc31e # Common
+handle: seatsAvailable
+instructions: null
+name: 'Seats Available'
+searchable: false
+settings:
+  decimals: 0
+  defaultValue: null
+  max: null
+  min: 0
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
+  size: null
+  suffix: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Number

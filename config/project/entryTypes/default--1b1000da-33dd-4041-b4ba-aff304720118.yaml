@@ -30,17 +30,41 @@ fieldLayouts:
             userCondition: null
             warning: null
             width: 100
+          -
+            elementCondition: null
+            fieldUid: 6d4be476-efd7-4974-aa25-187c2c2ea78f # Event
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 21ca8233-ef6b-4135-8db4-f5b935d2a6de
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: f38eea64-9a8c-4240-955b-3a311f1f1c4c # Seats Available
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 70117aed-7d00-413b-8641-9f555b1e4605
+            userCondition: null
+            warning: null
+            width: 100
         name: Content
         uid: 767dee0d-c608-46bc-8728-515c8f405aec
         userCondition: null
 handle: default
-hasTitleField: true
+hasTitleField: false
 name: Default
 section: 39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f # Event Tickets
 showStatusField: true
 slugTranslationKeyFormat: null
 slugTranslationMethod: site
 sortOrder: 1
-titleFormat: null
+titleFormat: '{event.one.title} ({seatsAvailable})'
 titleTranslationKeyFormat: null
 titleTranslationMethod: site
