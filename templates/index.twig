@@ -4,6 +4,11 @@
 
 {# Params #}
 {% set ticketTypes = craft.entries.section('ticketTypes').all() %}
+{% set eventSeats = craft.entries.section('eventSeats')
+  .with(['event'])
+  .all()
+  |index('event.0.id')
+%}
 {% set events = craft.entries.section('events')
   .with(['venue', 'ticketTypes'])
   .all()
@@ -11,13 +16,18 @@
     ? a.venue.one().title <=> b.venue.one().title
     : a.startDate <=> b.startDate
   )
+  |map(event => event|merge({
+    seatsAvailable: eventSeats[event.id].seatsAvailable
+      ?? event.venue[0].seatsAvailable
+      ?? false
+  }))
 %}
 
 
 
 {# Layout #}
 {% block page_body %}
-  <main class="max-w-xl px-6 mx-auto">
+  <main class="max-w-4xl px-6 mx-auto">
     {{ block('index_intro') }}
     {{ block('index_list') }}
   </main>
@@ -53,8 +63,8 @@
     {% endif %}
     
     <li>
-      <article class="flex gap-2 justify-between items-center py-8">
-        <div class="flex-1">
+      <article class="grid grid-cols-2 md:grid-cols-4 gap-2 items-center py-8">
+        <div class="col-span-2">
           <h2 class="text-xl font-bold mb-1">
             {{ event.title }}
           </h2>
@@ -69,10 +79,41 @@
           </p>
         </div>
         
-        <div class="text-sm w-32">
+        <div class="text-sm">
           {{ event.ticketTypes.all()
               |join('<br>')
               |raw }}
+        </div>
+        
+        <div class="flex items-center justify-end gap-2">
+          {% if event.seatsAvailable %}
+            {% tag 'span' with {
+              class: [
+                'text-xs',
+                event.seatsAvailable > 50
+                ? 'text-green-500'
+                : (event.seatsAvailable > 0
+                  ? 'text-amber-500'
+                  : 'text-red'
+                )
+              ],
+            } %}
+              {{ event.seatsAvailable }} seats
+            {% endtag %}
+          {% endif %}
+          {% tag 'button' with {
+            class: [
+              not event.seatsAvailable ? 'opacity-50',
+              'py-1 px-2',
+              'font-bold text-sm',
+              'bg-gray-100 border shadow-sm rounded transition',
+              event.seatsAvailable ? 'hover:bg-gray-200',
+              event.seatsAvailable ? 'active:scale-95',
+            ],
+            disabled: not event.seatsAvailable,
+          } %}
+            {{ event.seatsAvailable ? 'Attend' : 'Fully Booked' }}
+          {% endtag %}
         </div>
       </article>
     </li>
