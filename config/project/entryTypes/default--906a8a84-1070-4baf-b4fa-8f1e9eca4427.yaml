@@ -1,0 +1,106 @@
+fieldLayouts:
+  185d8b92-de67-4c8b-bf67-cc1ddca78d6f:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: a5a22291-a2a6-4dcf-8a13-5c58df646397
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: fa505187-cda5-433e-8ede-ff59bcaaf83c # Artists
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 8a78b1eb-d485-48e8-9598-f04ffcac9a4d
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: d34911a7-7495-403e-9274-c6ebb97698f4 # Venue
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 7e465db2-7b54-43e5-826e-e5c57766cd0f
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: a92807df-eb71-4ecb-ab1d-0620e82f7a87 # Start Date
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: dde8e7c2-41fb-4045-bd87-91b2da0f2d1f
+            userCondition: null
+            warning: null
+            width: 50
+          -
+            elementCondition: null
+            fieldUid: a7847618-4f13-492c-9f36-2c98679ee7c6 # End Date
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 8c3492a0-1e78-41ec-9fc6-565a54e60142
+            userCondition: null
+            warning: null
+            width: 50
+          -
+            elementCondition: null
+            fieldUid: d464b66a-c5f1-47c6-a51b-57f1babebff2 # Ticket Types
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 0051033c-677b-4b58-b249-258b220ce922
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 44a5943d-e4c1-4d78-9fec-584c8ee5209b
+        userCondition: null
+handle: default
+hasTitleField: false
+name: Default
+section: 5473c65a-ee4c-4a40-a958-8fd045665aab # Events
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+sortOrder: 1
+titleFormat: '{artists.all()|join('', '')}'
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

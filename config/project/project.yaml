@@ -1,4 +1,53 @@
-dateModified: 1694959552
+dateModified: 1694963213
+elementSources:
+  craft\elements\Entry:
+    -
+      key: '*'
+      type: native
+    -
+      key: singles
+      type: native
+    -
+      heading: Channels
+      type: heading
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:8c0fb2bb-fb77-43e1-bdc1-774f32e09839' # Artists
+      tableAttributes:
+        - 'field:684ebf49-47fd-4fb2-9391-c62f73834e4c' # Website
+      type: native
+    -
+      key: 'section:39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f' # Event Tickets
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:5473c65a-ee4c-4a40-a958-8fd045665aab' # Events
+      tableAttributes:
+        - 'field:d34911a7-7495-403e-9274-c6ebb97698f4' # Venue
+        - 'field:a92807df-eb71-4ecb-ab1d-0620e82f7a87' # Start Date
+        - 'field:a7847618-4f13-492c-9f36-2c98679ee7c6' # End Date
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:5ff17206-0cb2-4f7f-9523-f6b2119841e4' # Venues
+      tableAttributes:
+        - link
+      type: native
+    -
+      heading: Structures
+      type: heading
+    -
+      key: 'section:b5df3c97-0afb-45b6-9d47-4c266ab769cc' # Ticket Types
+      type: native
 email:
   fromEmail: hello+demystifying@miranj.in
   fromName: 'Demystifying the Craft API'
@@ -9,9 +58,27 @@ email:
   transportType: craft\mail\transportadapters\Sendmail
 meta:
   __names__:
+    1b1000da-33dd-4041-b4ba-aff304720118: Default # Default
+    5ff17206-0cb2-4f7f-9523-f6b2119841e4: Venues # Venues
+    8a3c91a6-0a3f-4118-8c4e-b57a51ad7905: Home # Home
+    8c0fb2bb-fb77-43e1-bdc1-774f32e09839: Artists # Artists
+    13e5485b-5a3d-47f3-a8f1-bd285d0e3fda: Default # Default
+    39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f: 'Event Tickets' # Event Tickets
     71a06e16-09c8-4a1f-afc1-9e75603074b2: 'Demystifying the Craft API' # Demystifying the Craft API
+    97da1ff5-d475-4197-8928-92821baee075: Home # Home
+    235cdc60-0e16-4ee6-9923-75595a2fc629: Default # Default
+    684ebf49-47fd-4fb2-9391-c62f73834e4c: Website # Website
+    906a8a84-1070-4baf-b4fa-8f1e9eca4427: Default # Default
     5201e202-c121-4180-8bca-fb90eb1cc31e: Common # Common
+    5473c65a-ee4c-4a40-a958-8fd045665aab: Events # Events
+    9762c26a-6b51-4473-b9a7-a57cc943a79f: Default # Default
+    a92807df-eb71-4ecb-ab1d-0620e82f7a87: 'Start Date' # Start Date
+    a7847618-4f13-492c-9f36-2c98679ee7c6: 'End Date' # End Date
+    b5df3c97-0afb-45b6-9d47-4c266ab769cc: 'Ticket Types' # Ticket Types
     c8bb82a8-5eb8-4838-8862-acf3772b654f: Default # Default
+    d464b66a-c5f1-47c6-a51b-57f1babebff2: 'Ticket Types' # Ticket Types
+    d34911a7-7495-403e-9274-c6ebb97698f4: Venue # Venue
+    fa505187-cda5-433e-8ede-ff59bcaaf83c: Artists # Artists
 system:
   edition: solo
   live: true

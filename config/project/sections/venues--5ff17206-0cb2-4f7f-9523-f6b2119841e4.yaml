@@ -1,0 +1,12 @@
+defaultPlacement: end
+enableVersioning: true
+handle: venues
+name: Venues
+propagationMethod: all
+siteSettings:
+  71a06e16-09c8-4a1f-afc1-9e75603074b2: # Demystifying the Craft API
+    enabledByDefault: true
+    hasUrls: true
+    template: venues/_entry
+    uriFormat: 'venues/{slug}'
+type: channel

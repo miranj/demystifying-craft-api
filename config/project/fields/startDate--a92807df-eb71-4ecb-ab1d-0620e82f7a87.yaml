@@ -1,0 +1,17 @@
+columnSuffix: jfksmsyu
+contentColumnType: datetime
+fieldGroup: 5201e202-c121-4180-8bca-fb90eb1cc31e # Common
+handle: startDate
+instructions: null
+name: 'Start Date'
+searchable: false
+settings:
+  max: '2023-10-05T00:00:00+05:30'
+  min: '2023-10-03T00:00:00+05:30'
+  minuteIncrement: 60
+  showDate: true
+  showTime: true
+  showTimeZone: false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Date

@@ -1,0 +1,14 @@
+columnSuffix: aalksqbl
+contentColumnType: string(255)
+fieldGroup: 5201e202-c121-4180-8bca-fb90eb1cc31e # Common
+handle: website
+instructions: null
+name: Website
+searchable: false
+settings:
+  maxLength: 255
+  types:
+    - url
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Url

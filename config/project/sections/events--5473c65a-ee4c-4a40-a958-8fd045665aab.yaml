@@ -1,0 +1,12 @@
+defaultPlacement: end
+enableVersioning: true
+handle: events
+name: Events
+propagationMethod: all
+siteSettings:
+  71a06e16-09c8-4a1f-afc1-9e75603074b2: # Demystifying the Craft API
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+type: channel

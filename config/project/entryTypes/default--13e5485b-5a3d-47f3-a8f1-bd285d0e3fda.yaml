@@ -1,0 +1,58 @@
+fieldLayouts:
+  c3b59334-609f-4b99-83b0-99e513620deb:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 956b734b-7915-48e2-b545-5b451d4d6833
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 684ebf49-47fd-4fb2-9391-c62f73834e4c # Website
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 3f5a237c-c85f-4eb9-b16b-6948b102a135
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 90c20309-5061-4af6-a197-8e5d9935347f
+        userCondition: null
+handle: default
+hasTitleField: true
+name: Default
+section: 8c0fb2bb-fb77-43e1-bdc1-774f32e09839 # Artists
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

@@ -1,0 +1,46 @@
+fieldLayouts:
+  0b931c2c-2b04-4dd3-aade-d010cb84d1a2:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 194fa482-70d5-41ce-bf84-d4204e3bfa42
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 767dee0d-c608-46bc-8728-515c8f405aec
+        userCondition: null
+handle: default
+hasTitleField: true
+name: Default
+section: 39f0bd3a-7952-4ce3-ae5f-63dc38e6a53f # Event Tickets
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
