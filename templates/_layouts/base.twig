@@ -1,0 +1,32 @@
+{% extends '_layouts/html' %}
+
+
+
+{# Layout #}
+{% block body %}
+  {{ block('page_header') }}
+  {{ block('page_body') }}
+  {{ block('page_footer') }}
+{% endblock %}
+
+
+
+{# Render #}
+{% block page_header %}
+  <header class="max-w-xl px-6 mx-auto py-24">
+    <h1 class="text-4xl font-bold">
+      Music Festival
+    </h1>
+    <p>
+      3 days of music across your favourite venues in the city.
+    </p>
+  </header>
+{% endblock %}
+
+{% block page_body %}{% endblock %}
+
+{% block page_footer %}
+  <footer class="max-w-xl px-6 mx-auto py-4 border-t text-xs mt-24">
+    &copy; {{ now|date('Y') }} {{ siteName }}
+  </footer>
+{% endblock %}
