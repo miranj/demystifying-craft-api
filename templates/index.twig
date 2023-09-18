@@ -1,4 +1,5 @@
 {% extends '_layouts/base' %}
+{% from '_helpers' import cachedApiCall %}
 
 
 
@@ -10,7 +11,7 @@
   |index('event.0.id')
 %}
 {% set events = craft.entries.section('events')
-  .with(['venue', 'ticketTypes'])
+  .with(['venue', 'ticketTypes', 'artists'])
   .all()
   |sort((a, b) => a.startDate == b.startDate
     ? a.venue.one().title <=> b.venue.one().title
@@ -115,6 +116,22 @@
             {{ event.seatsAvailable ? 'Attend' : 'Fully Booked' }}
           {% endtag %}
         </div>
+        
+        {% for artist in event.artists.all() %}
+          {% set wikipediaPage = cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
+            headers: {
+              accept: 'application/json',
+              charset: 'utf-8',
+              profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
+              query: { redirect: 'false' },
+            },
+          })|trim|json_decode %}
+          {% if wikipediaPage.extract_html ?? false %}
+            <div class="col-span-full">
+              {{ wikipediaPage.extract|md }}
+            </div>
+          {% endif %}
+        {% endfor %}
       </article>
     </li>
     

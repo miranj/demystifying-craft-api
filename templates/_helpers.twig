@@ -1,0 +1,34 @@
+{# Re-usable Macros #}
+
+
+
+{% macro cachedApiCall(url, params) %}
+  {% set cacheDuration = 60 * 60 * 12 %} {# 12 hours #}
+  {% set cacheDurationOnError = 60 * 1 %} {# 1 min #}
+  {% set cacheKey = [url, params] %}
+  
+  {% set response = craft.app.cache.get(cacheKey) %}
+  {% if response is same as(false) %}
+    
+    {# Call API and fetch response #}
+    {% set apiResponse = create('\\GuzzleHttp\\Client')
+      .get(url, params)
+    %}
+  
+    {# Validate response #}
+    {% if apiResponse.getStatusCode() != 200 %}
+      {% set cacheDuration = cacheDurationOnError %}
+    {% else %}
+      {% set apiResponseBody = apiResponse.getBody().getContents() %}
+      {% if apiResponseBody|trim is empty %}
+        {% set cacheDuration = cacheDurationOnError %}
+      {% else %}
+        {% set response = apiResponseBody %}
+      {% endif %}
+    {% endif %}
+  
+    {% do craft.app.cache.set(cacheKey, response, cacheDuration) %}
+  {% endif %}
+  
+  {{- response|raw -}}
+{% endmacro %}
