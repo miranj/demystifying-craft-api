@@ -1,0 +1,19 @@
+columnSuffix: dfdkislb
+contentColumnType: text
+fieldGroup: 5201e202-c121-4180-8bca-fb90eb1cc31e # Common
+handle: bio
+instructions: null
+name: Bio
+searchable: false
+settings:
+  byteLimit: null
+  charLimit: null
+  code: false
+  columnType: null
+  initialRows: 4
+  multiline: true
+  placeholder: null
+  uiMode: normal
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

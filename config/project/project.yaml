@@ -1,4 +1,4 @@
-dateModified: 1694979989
+dateModified: 1695331171
 elementSources:
   craft\elements\Entry:
     -
@@ -83,6 +83,7 @@ meta:
     a7847618-4f13-492c-9f36-2c98679ee7c6: 'End Date' # End Date
     b5df3c97-0afb-45b6-9d47-4c266ab769cc: 'Ticket Types' # Ticket Types
     c8bb82a8-5eb8-4838-8862-acf3772b654f: Default # Default
+    cd5a4994-0a39-4020-b7e6-3e1f953feafb: Bio # Bio
     d464b66a-c5f1-47c6-a51b-57f1babebff2: 'Ticket Types' # Ticket Types
     d34911a7-7495-403e-9274-c6ebb97698f4: Venue # Venue
     f38eea64-9a8c-4240-955b-3a311f1f1c4c: 'Seats Available' # Seats Available
