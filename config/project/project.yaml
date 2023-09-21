@@ -87,11 +87,6 @@ meta:
     d34911a7-7495-403e-9274-c6ebb97698f4: Venue # Venue
     f38eea64-9a8c-4240-955b-3a311f1f1c4c: 'Seats Available' # Seats Available
     fa505187-cda5-433e-8ede-ff59bcaaf83c: Artists # Artists
-plugins:
-  element-api:
-    edition: standard
-    enabled: true
-    schemaVersion: 1.0.0
 system:
   edition: solo
   live: true
