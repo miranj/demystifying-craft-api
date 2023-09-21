@@ -12,10 +12,7 @@
 {% set events = craft.entries.section('events')
   .with(['venue', 'ticketTypes', 'artists'])
   .all()
-  |sort((a, b) => a.startDate == b.startDate
-    ? a.venue.one().title <=> b.venue.one().title
-    : a.startDate <=> b.startDate
-  )
+  |multisort(['startDate', 'venue.0.title'])
   |map(event => event|merge({
     seatsAvailable: eventSeats[event.id].seatsAvailable
       ?? event.venue[0].seatsAvailable
