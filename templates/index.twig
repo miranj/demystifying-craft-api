@@ -170,32 +170,37 @@
 
 {#
   Make an API call via Guzzle
+#}
+{% macro apiCall(url, params) %}
+  {# Call API and fetch response #}
+  {% set apiResponse = create('\\GuzzleHttp\\Client').get(url, params) %}
+
+  {# Validate response #}
+  {% if apiResponse.getStatusCode() == 200 %}
+    {% set response = apiResponse.getBody().getContents() %}
+    {{- response|raw -}}
+  {% endif %}
+{% endmacro %}
+
+
+
+{#
+  Make an API call via Guzzle
   and cache the results
-  
-  @param string url The url to make the GET request
-  @param array params List of params for the Guzzle GET request
 #}
 {% macro cachedApiCall(url, params) %}
   {% set cacheDuration = 60 * 60 * 12 %} {# 12 hours #}
   {% set cacheDurationOnError = 60 * 1 %} {# 1 min #}
   {% set cacheKey = [url, params] %}
   
+  {# Check cache #}
   {% set response = craft.app.cache.get(cacheKey) %}
   {% if response is same as(false) %}
     
-    {# Call API and fetch response #}
-    {% set apiResponse = create('\\GuzzleHttp\\Client')
-      .get(url, params)
-    %}
-  
-    {# Validate response #}
-    {% if apiResponse.getStatusCode() != 200 %}
+    {# Make API call #}
+    {% set response = _self.apiCall(url, params) %}
+    {% if response|trim is empty %}
       {% set cacheDuration = cacheDurationOnError %}
-    {% else %}
-      {% set response = apiResponse.getBody().getContents() %}
-      {% if response|trim is empty %}
-        {% set cacheDuration = cacheDurationOnError %}
-      {% endif %}
     {% endif %}
     
     {# Cache response #}
