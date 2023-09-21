@@ -1,5 +1,4 @@
 {% extends '_layouts/html' %}
-{% from '_helpers' import cachedApiCall %}
 
 
 
@@ -76,7 +75,7 @@
               <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
               <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-8 rounded ml-2">
                 {% for artist in event.artists.all() %}
-                  {% set wikipediaPage = cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
+                  {% set wikipediaPage = _self.cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
                     headers: {
                       accept: 'application/json',
                       charset: 'utf-8',
@@ -170,3 +169,42 @@
     {% endif %}
   {% endfor %}
 {% endblock %}
+
+
+
+{#
+  Make an API call via Guzzle
+  and cache the results
+  
+  @param string url The url to make the GET request
+  @param array params List of params for the Guzzle GET request
+#}
+{% macro cachedApiCall(url, params) %}
+  {% set cacheDuration = 60 * 60 * 12 %} {# 12 hours #}
+  {% set cacheDurationOnError = 60 * 1 %} {# 1 min #}
+  {% set cacheKey = [url, params] %}
+  
+  {% set response = craft.app.cache.get(cacheKey) %}
+  {% if response is same as(false) %}
+    
+    {# Call API and fetch response #}
+    {% set apiResponse = create('\\GuzzleHttp\\Client')
+      .get(url, params)
+    %}
+  
+    {# Validate response #}
+    {% if apiResponse.getStatusCode() != 200 %}
+      {% set cacheDuration = cacheDurationOnError %}
+    {% else %}
+      {% set response = apiResponse.getBody().getContents() %}
+      {% if response|trim is empty %}
+        {% set cacheDuration = cacheDurationOnError %}
+      {% endif %}
+    {% endif %}
+    
+    {# Cache response #}
+    {% do craft.app.cache.set(cacheKey, response, cacheDuration) %}
+  {% endif %}
+  
+  {{- response|raw -}}
+{% endmacro %}
