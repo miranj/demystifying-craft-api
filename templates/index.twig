@@ -66,9 +66,39 @@
     <li>
       <article class="grid grid-cols-2 md:grid-cols-4 gap-2 items-center py-8">
         <div class="col-span-2">
-          <h2 class="text-xl font-bold mb-1">
-            {{ event.title }}
-          </h2>
+          <div class="flex gap-1.5">
+            <h2 class="text-xl font-bold mb-1">
+              {{ event.title }}
+            </h2>
+            <details class="bg-blue-300 rounded-full w-4 h-4 text-xs self-center">
+              <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
+              <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-4 rounded ml-2">
+                {% set StringHelper = create('craft\\helpers\\StringHelper') %}
+                {% for artist in event.artists.all() %}
+                  {% set wikipediaPage = cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
+                    headers: {
+                      accept: 'application/json',
+                      charset: 'utf-8',
+                      profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
+                      query: { redirect: 'false' },
+                    },
+                  })|trim|json_decode %}
+                  {% if wikipediaPage.extract_html ?? false %}
+                    <div class="text-sm">
+                      {{ StringHelper.replaceFirst(
+                          wikipediaPage.extract|md,
+                          artist.title,
+                          tag('strong', {
+                            text: artist.title,
+                            class: 'text-black',
+                          })
+                      )|raw }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </details>
+          </div>
           
           <p class="text-xs text-gray-500">
             <time datetime="{{ event.startDate|atom }}">
@@ -116,22 +146,6 @@
             {{ event.seatsAvailable ? 'Attend' : 'Fully Booked' }}
           {% endtag %}
         </div>
-        
-        {% for artist in event.artists.all() %}
-          {% set wikipediaPage = cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
-            headers: {
-              accept: 'application/json',
-              charset: 'utf-8',
-              profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
-              query: { redirect: 'false' },
-            },
-          })|trim|json_decode %}
-          {% if wikipediaPage.extract_html ?? false %}
-            <div class="col-span-full">
-              {{ wikipediaPage.extract|md }}
-            </div>
-          {% endif %}
-        {% endfor %}
       </article>
     </li>
     
