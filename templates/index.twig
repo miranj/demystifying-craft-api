@@ -85,15 +85,12 @@
                     },
                   })|trim|json_decode %}
                   
-                  {% set artistBio = (wikipediaPage.extract ?? '')|md %}
-                  {% set artistBio = StringHelper.replaceFirst(
-                    artistBio,
-                    artist.title,
-                    tag('strong', {
-                      text: artist.title,
-                      class: 'text-base font-semibold',
-                    })
-                  ) %}
+                  {% set artistBio = wikipediaPage.extract ?? '' %}
+                  {% set artistBio = StringHelper.shortenAfterWord(artistBio, 200)|md %}
+                  {% set artistBio = StringHelper.replaceFirst(artistBio, artist.title, tag('strong', {
+                    text: artist.title,
+                    class: 'text-base font-semibold',
+                  })) %}
                   
                   {% set artistWebsite = artist.website ? tag('a', {
                     class: 'text-blue-600 text-xs',
