@@ -119,28 +119,20 @@
         </div>
         
         <div class="text-sm">
-          {{ event.ticketTypes.all()
-              |join('<br>')
-              |raw }}
+          {{ event.ticketTypes.all()|join('<br>')|raw }}
         </div>
         
         <div class="flex items-center justify-end gap-2">
-          {% if event.seatsAvailable %}
-            {% tag 'span' with {
-              class: [
-                'text-xs',
-                event.seatsAvailable > 50
-                ? 'text-green-500'
-                : (event.seatsAvailable > 0
-                  ? 'text-amber-500'
-                  : 'text-red'
-                )
-              ],
-            } %}
-              {{ event.seatsAvailable }} seats
-            {% endtag %}
-          {% endif %}
-          {% tag 'button' with {
+          {{ event.seatsAvailable ? tag('span', {
+            class: [
+              'text-xs',
+              event.seatsAvailable < 10 ? 'text-red-500',
+              event.seatsAvailable >= 10 and event.seatsAvailable <= 50 ? 'text-amber-500',
+              event.seatsAvailable > 50 ? 'text-green-500',
+            ],
+            text: event.seatsAvailable ~ ' seats',
+          }) }}
+          <button {{ attr({
             class: [
               not event.seatsAvailable ? 'opacity-50',
               'py-1 px-2',
@@ -150,9 +142,9 @@
               event.seatsAvailable ? 'active:scale-95',
             ],
             disabled: not event.seatsAvailable,
-          } %}
+          }) }}>
             {{ event.seatsAvailable ? 'Attend' : 'Fully Booked' }}
-          {% endtag %}
+          </button>
         </div>
       </article>
     </li>
