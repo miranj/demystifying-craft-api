@@ -75,16 +75,19 @@
               <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
               <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-8 rounded ml-2">
                 {% for artist in event.artists.all() %}
-                  {% set wikipediaPage = _self.cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
-                    headers: {
-                      accept: 'application/json',
-                      charset: 'utf-8',
-                      profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
-                      query: { redirect: 'false' },
-                    },
-                  })|trim|json_decode %}
+                  {% set artistBio = artist.bio|trim %}
+                  {% if artistBio is empty %}
+                    {% set wikipediaPage = _self.cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
+                      headers: {
+                        accept: 'application/json',
+                        charset: 'utf-8',
+                        profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
+                        query: { redirect: 'false' },
+                      },
+                    })|trim|json_decode %}
+                    {% set artistBio = wikipediaPage.extract ?? '' %}
+                  {% endif %}
                   
-                  {% set artistBio = wikipediaPage.extract ?? '' %}
                   {% set artistBio = StringHelper.shortenAfterWord(artistBio, 200)|md %}
                   {% set artistBio = StringHelper.replaceFirst(artistBio, artist.title, tag('strong', {
                     text: artist.title,
