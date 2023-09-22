@@ -1,19 +1,38 @@
+{# templates/index.twig #}
 {% extends '_layout' %}
 
 
 
-{# Params #}
+{#
+  Params
+#}
 {% set ticketTypes = craft.entries.section('ticketTypes').all() %}
-{% set eventSeats = craft.entries.section('eventSeats')
-  .with(['event'])
-  .all()
-  |index('event.0.id')
-%}
-{% set events = craft.entries.section('events')
+{% set eventsList = craft.entries.section('events')
   .with(['venue', 'ticketTypes', 'artists'])
   .all()
   |multisort(['startDate', 'venue.0.title'])
-  |map(event => event|merge({
+%}
+
+{# Figure out artist bios #}
+{% set artists = collect(eventsList)
+  .pluck('artists')
+  .flatten()
+  .unique()
+  .all()
+  |index('id')
+  |map(artist => artist|merge({
+    bio: artist.bio ?: _self.getBioFromWikipedia(artist),
+  }))
+%}
+
+{# Calculate seat info for each event #}
+{% set eventSeats = craft.entries.section('eventSeats')
+  .with(['event'])
+  .all()
+  |filter(seatsInfo => seatsInfo.event is not empty)
+  |index('event.0.id')
+%}
+{% set eventsList = eventsList|map(event => event|merge({
     seatsAvailable: eventSeats[event.id].seatsAvailable
       ?? event.venue[0].seatsAvailable
       ?? false
@@ -22,7 +41,9 @@
 
 
 
-{# Layout #}
+{#
+  Layout
+#}
 {% block page_body %}
   <main class="max-w-4xl px-6 mx-auto">
     {{ block('index_intro') }}
@@ -32,7 +53,9 @@
 
 
 
-{# Render #}
+{#
+  Render
+#}
 {% block index_intro %}
   {% for ticketType in ticketTypes %}
     {% if loop.first %}
@@ -59,7 +82,7 @@
 {% block index_list %}
   {% set StringHelper = create('craft\\helpers\\StringHelper') %}
   
-  {% for event in events %}
+  {% for event in eventsList %}
     {% if loop.first %}
       <h3 class="uppercase text-gray-500 text-xs tracking-wider">
         Performances
@@ -78,19 +101,7 @@
               <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
               <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-8 rounded ml-2">
                 {% for artist in event.artists.all() %}
-                  {% set artistBio = artist.bio|trim %}
-                  {% if artistBio is empty %}
-                    {% set wikipediaPage = _self.cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ artist.title, {
-                      headers: {
-                        accept: 'application/json',
-                        charset: 'utf-8',
-                        profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
-                        query: { redirect: 'false' },
-                      },
-                    })|trim|json_decode %}
-                    {% set artistBio = wikipediaPage.extract ?? '' %}
-                  {% endif %}
-                  
+                  {% set artistBio = artists[artist.id].bio %}
                   {% set artistBio = StringHelper.shortenAfterWord(artistBio, 200)|md %}
                   {% set artistBio = StringHelper.replaceFirst(artistBio, artist.title, tag('strong', {
                     text: artist.title,
@@ -138,7 +149,7 @@
             ],
             text: event.seatsAvailable ~ ' seats',
           }) }}
-          <button {{ attr({
+          {{ tag('button', {
             class: [
               not event.seatsAvailable ? 'opacity-50',
               'py-1 px-2',
@@ -148,9 +159,8 @@
               event.seatsAvailable ? 'active:scale-95',
             ],
             disabled: not event.seatsAvailable,
-          }) }}>
-            {{ event.seatsAvailable ? 'Attend' : 'Fully Booked' }}
-          </button>
+            text: event.seatsAvailable ? 'Attend' : 'Fully Booked',
+          }) }}
         </div>
       </article>
     </li>
@@ -163,13 +173,23 @@
 
 
 
-{#
-  Make an API call via Guzzle
-#}
-{% macro apiCall(url, params) %}
-  {# Call API and fetch response #}
-  {% set apiResponse = create('\\GuzzleHttp\\Client').get(url, params) %}
+{# Fetch artist bio from Wikipedia #}
+{% macro getBioFromWikipedia(name) %}
+  {% set wikipediaPage = _self.cachedApiCall('https://en.wikipedia.org/api/rest_v1/page/summary/' ~ name, {
+    headers: {
+      accept: 'application/json',
+      charset: 'utf-8',
+      profile: 'https://www.mediawiki.org/wiki/Specs/Summary/1.4.2',
+      query: { redirect: 'false' },
+    },
+  })|trim|json_decode %}
+  {{- wikipediaPage.extract ?? '' -}}
+{% endmacro %}
 
+{# Make an API call via Guzzle #}
+{% macro apiCall(url, params) %}
+  {% set apiResponse = create('\\GuzzleHttp\\Client').get(url, params) %}
+  
   {# Validate response #}
   {% if apiResponse.getStatusCode() == 200 %}
     {% set response = apiResponse.getBody().getContents() %}
