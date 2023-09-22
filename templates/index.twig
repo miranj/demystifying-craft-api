@@ -42,7 +42,13 @@
       <ul class="flex gap-1 mb-24">
     {% endif %}
         <li class="p-4 flex-1 bg-gray-100 h-40">
-          {{ ticketType }}
+          <h4 class="font-medium mb-1 text-lg">
+            {{ ticketType.title }}
+          </h4>
+          {{ ticketType.bio ? tag('div', {
+            class: 'text-sm text-gray-500 leading-relaxed',
+            html: ticketType.bio|nl2br|md,
+          }) }}
         </li>
     {% if loop.last %}
       </ul> 

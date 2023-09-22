@@ -1,4 +1,4 @@
-dateModified: 1695331171
+dateModified: 1695404909
 elementSources:
   craft\elements\Entry:
     -
@@ -35,8 +35,8 @@ elementSources:
       key: 'section:5473c65a-ee4c-4a40-a958-8fd045665aab' # Events
       tableAttributes:
         - 'field:d34911a7-7495-403e-9274-c6ebb97698f4' # Venue
+        - 'field:d464b66a-c5f1-47c6-a51b-57f1babebff2' # Ticket Types
         - 'field:a92807df-eb71-4ecb-ab1d-0620e82f7a87' # Start Date
-        - 'field:a7847618-4f13-492c-9f36-2c98679ee7c6' # End Date
       type: native
     -
       defaultSort:
