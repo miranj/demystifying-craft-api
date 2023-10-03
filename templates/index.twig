@@ -6,32 +6,42 @@
 {#
   Params
 #}
+
 {% set ticketTypes = craft.entries.section('ticketTypes').all() %}
 {% set eventsList = craft.entries.section('events')
   .with(['venue', 'ticketTypes', 'artists'])
   .all()
-  |multisort(['startDate', 'venue.0.title'])
 %}
-
-{# Figure out artist bios #}
-{% set artists = collect(eventsList)
-  .pluck('artists')
+{% set artistsList = collect(eventsList).pluck('artists')
   .flatten()
   .unique()
+  .keyBy('id')
+  .sortBy('title', constant('SORT_NATURAL') b-or constant('SORT_FLAG_CASE'))
   .all()
-  |index('id')
-  |map(artist => artist|merge({
-    bio: artist.bio ?: _self.getBioFromWikipedia(artist),
-  }))
 %}
-
-{# Calculate seat info for each event #}
 {% set eventSeats = craft.entries.section('eventSeats')
   .with(['event'])
   .all()
   |filter(seatsInfo => seatsInfo.event is not empty)
   |index('event.0.id')
 %}
+
+
+
+{#
+  Biz logic
+#}
+
+{# Sort events by date, and by venue #}
+{% set eventsList = eventsList|multisort(['startDate', 'venue.0.title']) %}
+
+{# Figure out artist bios #}
+{% set artistsList = artistsList|map(artist => artist|merge({
+    bio: artist.bio ?: _self.getBioFromWikipedia(artist),
+  }))
+%}
+
+{# Calculate seat info for each event #}
 {% set eventsList = eventsList|map(event => event|merge({
     seatsAvailable: eventSeats[event.id].seatsAvailable
       ?? event.venue[0].seatsAvailable
@@ -44,10 +54,12 @@
 {#
   Layout
 #}
+
 {% block page_body %}
   <main class="max-w-4xl px-6 mx-auto">
-    {{ block('index_intro') }}
-    {{ block('index_list') }}
+    {{ block('index_artists') }}
+    {{ block('index_tickets') }}
+    {{ block('index_events') }}
   </main>
 {% endblock %}
 
@@ -56,7 +68,8 @@
 {#
   Render
 #}
-{% block index_intro %}
+
+{% block index_tickets %}
   {% for ticketType in ticketTypes %}
     {% if loop.first %}
       <h3 class="uppercase text-gray-500 text-xs tracking-wider mb-3">
@@ -64,7 +77,7 @@
       </h3>
       <ul class="flex gap-1 mb-24">
     {% endif %}
-        <li class="p-4 flex-1 bg-gray-100 h-40">
+        <li class="p-4 flex-1 bg-gray-100 min-h-[10rem]">
           <h4 class="font-medium mb-1 text-lg">
             {{ ticketType.title }}
           </h4>
@@ -79,7 +92,7 @@
   {% endfor %}
 {% endblock %}
 
-{% block index_list %}
+{% block index_events %}
   {% set StringHelper = create('craft\\helpers\\StringHelper') %}
   
   {% for event in eventsList %}
@@ -101,8 +114,8 @@
               <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
               <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-8 rounded ml-2">
                 {% for artist in event.artists.all() %}
-                  {% set artistBio = artists[artist.id].bio %}
-                  {% set artistBio = StringHelper.shortenAfterWord(artistBio, 200)|md %}
+                  {% set artistBio = artistsList[artist.id].bio %}
+                  {% set artistBio = artistBio|truncate(200)|md %}
                   {% set artistBio = StringHelper.replaceFirst(artistBio, artist.title, tag('strong', {
                     text: artist.title,
                     class: 'text-base font-semibold',
@@ -171,7 +184,30 @@
   {% endfor %}
 {% endblock %}
 
+{% block index_artists %}
+  {% if artistsList is not empty %}
+    <h3 class="uppercase text-gray-500 text-xs tracking-wider mb-3">
+      All Artists
+    </h3>
+    <ul class="columns-3xs gap-2 mb-24 space-y-0.5">
+      {% for artist in artistsList %}
+        <li>
+          {{ artist.website ? tag('a', {
+            href: artist.website,
+            text: artist.title,
+            class: 'hover:underline',
+          }) : artist.title }}
+        </li>
+      {% endfor %}
+    </ul> 
+  {% endif %}
+{% endblock %}
 
+
+
+{#
+  Macros
+#}
 
 {# Fetch artist bio from Wikipedia #}
 {% macro getBioFromWikipedia(name) %}
@@ -186,6 +222,7 @@
   {{- wikipediaPage.extract ?? '' -}}
 {% endmacro %}
 
+
 {# Make an API call via Guzzle #}
 {% macro apiCall(url, params) %}
   {% set apiResponse = create('\\GuzzleHttp\\Client').get(url, params) %}
@@ -198,13 +235,9 @@
 {% endmacro %}
 
 
-
-{#
-  Make an API call via Guzzle
-  and cache the results
-#}
+{# Cache the results of apiCall() #}
 {% macro cachedApiCall(url, params) %}
-  {% set cacheDuration = 60 * 60 * 12 %} {# 12 hours #}
+  {% set cacheDuration = 60 * 60 * 24 * 30 %} {# 1 month #}
   {% set cacheDurationOnError = 60 * 1 %} {# 1 min #}
   {% set cacheKey = [url, params] %}
   

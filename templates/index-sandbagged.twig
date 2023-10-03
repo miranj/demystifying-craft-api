@@ -1,0 +1,202 @@
+{# templates/index-sandbagged.twig #}
+{% extends '_layout' %}
+
+
+{# Params #}
+{% set eventsList = craft.entries
+  .section('events')
+  .orderBy('startDate')
+  .all() %}
+{% set artistsList = craft.entries
+  .section('artists')
+  .relatedTo(eventsList)
+  .orderBy('title asc')
+  .all() %}
+{% set ticketTypes = craft.entries
+  .section('ticketTypes')
+  .all() %}
+
+
+{# Render #}
+{% block page_body %}
+  <main class="max-w-4xl px-6 mx-auto">
+    {#
+      Render all artists
+    #}
+    {% if artistsList is not empty %}
+      <h3 class="uppercase text-gray-500 text-xs tracking-wider mb-3">
+        All Artists
+      </h3>
+      <ul class="columns-3xs gap-2 mb-24 space-y-0.5">
+        {% for artist in artistsList %}
+          <li>
+            {% if artist.website %}
+              <a class="hover:underline" href="{{ artist.website }}">
+                {{ artist.title }}
+              </a>
+            {% else %}
+              {{ artist.title }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    
+    
+    {#
+      Render ticket types
+    #}
+    {% if ticketTypes is not empty %}
+      <h3 class="uppercase text-gray-500 text-xs tracking-wider mb-3">
+        Ticket Types
+      </h3>
+      <ul class="flex gap-1 mb-24">
+        {% for ticketType in ticketTypes %}
+          <li class="p-4 flex-1 bg-gray-100 min-h-[10rem]">
+            <h4 class="font-medium mb-1 text-lg">
+              {{ ticketType.title }}
+            </h4>
+            {% if ticketType.bio %}
+              <div class="text-sm text-gray-500 leading-relaxed">
+                {{ ticketType.bio|nl2br|md }}
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul> 
+    {% endif %}
+    
+    
+    
+    {#
+      Render events list
+      sorted by date, and then sort by venue
+    #}
+    {% set eventsList = eventsList
+      |sort((a, b) => a.startDate == b.startDate
+        ? a.venue.one().title <=> b.venue.one().title
+        : a.startDate <=> b.startDate
+      )
+    %}
+    {% if eventsList is not empty %}
+      <h3 class="uppercase text-gray-500 text-xs tracking-wider">
+        Performances
+      </h3>
+      <ul class="divide-y divide-gray-200">
+        {% for event in eventsList %}
+          <li>
+            <article class="grid grid-cols-2 md:grid-cols-4 gap-2 items-center py-8">
+              
+              {#
+                Artists info, date, venue
+              #}
+              <div class="col-span-2">
+                <div class="flex gap-1.5">
+                  <h2 class="text-xl font-bold mb-1">
+                    {{ event.title }}
+                  </h2>
+                  
+                  <details class="bg-blue-300 rounded-full w-4 h-4 text-xs self-center">
+                    <summary class="list-none text-center cursor-pointer text-white font-bold font-mono">i</summary>
+                    <div class="absolute max-w-xs p-4 bg-gray-100 shadow-md space-y-8 rounded ml-2">
+                      {% for artist in event.artists.all() %}
+                        {% if artist.bio or artist.website %}
+                          <div class="text-sm">
+                            {% set artistBio = _self.truncate(artist.bio, 200, '…')|md %}
+                            {% set artistBio = artistBio|replace(artist.title, tag('strong', {
+                              text: artist.title,
+                              class: 'text-base font-semibold',
+                            })) %}
+                            {{ artistBio|raw }}
+                            {% if artist.website %}
+                              <a class="text-blue-600 text-xs" href="{{ artist.website }}">
+                                Official Website &rarr;
+                              </a>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </details>
+                </div>
+          
+                <p class="text-xs text-gray-500">
+                  <time datetime="{{ event.startDate|atom }}">
+                    {{ event.startDate|time('ga') }},
+                    {{ event.startDate|date('j M') }}
+                  </time>
+                  •
+                  {{ event.venue.one() }}
+                </p>
+              </div>
+              
+              
+              {#
+                Ticket types
+              #}
+              <div class="text-sm">
+                {{ event.ticketTypes.all()|join('<br>')|raw }}
+              </div>
+              
+              
+              {#
+                Available seats & RSVP
+              #}
+              <div class="flex items-center justify-end gap-2">
+                {% set eventSeatsInfo = craft.entries.section('eventSeats').relatedTo(event).one() %}
+                {% set seatsAvailable = eventSeatsInfo.seatsAvailable ?? event.venue.one().seatsAvailable %}
+                
+                {% if seatsAvailable %}
+                  <span class="text-xs {{ seatsAvailable < 10 ? 'text-red-500' }} {{ seatsAvailable >= 10 and seatsAvailable <= 50 ? 'text-amber-500' }} {{ seatsAvailable > 50 ? 'text-green-500' }}">
+                    {{ seatsAvailable }} seats
+                  </span>
+                {% endif %}
+                
+                <button
+                  class="py-1 px-2 font-bold text-sm bg-gray-100 border shadow-sm rounded transition {{ not seatsAvailable ? 'opacity-50' }} {{ seatsAvailable ? 'hover:bg-gray-200 active:scale-95' }}"
+                  {% if not seatsAvailable %}disabled{% endif %}>
+                  {{ seatsAvailable ? 'Attend' : 'Fully Booked' }}
+                </button>
+              </div>
+              
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </main>
+{% endblock %}
+
+
+
+{#
+  Truncate a string
+#}
+{% macro truncate(string, maxLength, truncator) %}
+{%- apply trim -%}
+  
+  {% if string|length <= maxLength %}
+    {{ string }}
+  
+  {% else %}
+    
+    {# Straightforward, but can cut words #}
+    {# {{- string|slice(0, maxLength) ~ truncator -}} #}
+    
+    {# Tries to avoid cutting words #}
+    {% set words = string|split(' ') %}
+    {% set truncatedString = '' %}
+    {% for word in words %}
+      {% set newTruncatedString = truncatedString ~ ' ' ~ word %}
+      {% if newTruncatedString|length < maxLength %}
+        {% set truncatedString = newTruncatedString %}
+      {% endif %}
+    {% endfor %}
+    
+    {{ (truncatedString ~ truncator)|trim }}
+    
+  {% endif %}
+  
+{%- endapply -%}
+{% endmacro %}
